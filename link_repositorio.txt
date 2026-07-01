@@ -1,0 +1,8 @@
+Repositorio del proyecto (Tarea #3 - Dashboards en Python):
+
+https://github.com/<usuario>/<nombre-del-repositorio>
+
+Instrucciones: crear un repositorio en GitHub/GitLab, subir el contenido de esta
+carpeta (app.py, data_processing.py, eda_analysis.py, requirements.txt,
+README.md, data/AirQualityUCI.csv) y reemplazar la URL de arriba por la URL
+real del repositorio antes de entregar.
