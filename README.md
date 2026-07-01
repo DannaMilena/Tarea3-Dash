@@ -17,9 +17,9 @@ italiana, junto con sus concentraciones de referencia certificadas
 
 ```
 .
-├── app.py                  # Dashboard Flask + Dash + Plotly (frontend)
-├── data_processing.py      # Carga y limpieza de datos (backend)
-├── eda_analysis.py         # EDA, pruebas de normalidad y modelo de ML
+├── app.py                  # Dashboard Flask + Dash + Plotly
+├── data_processing.py      # Carga y limpieza de datos
+├── eda_analysis.py         # EDA
 ├── requirements.txt
 ├── README.md
 └── data/
