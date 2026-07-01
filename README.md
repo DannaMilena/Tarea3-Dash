@@ -74,4 +74,6 @@ fechas, agregación de la serie de tiempo, y los callbacks de las graficas
 
 ## Autores
 
-_(Completar con nombre y cédula de cada integrante del grupo)_
+Danna Medrano
+Nathanael Villar
+Elizabeth Archibold
