@@ -113,6 +113,8 @@ def missing_summary(df_with_nan: pd.DataFrame) -> pd.DataFrame:
 
 if __name__ == "__main__":
     raw = load_raw("data/AirQualityUCI.csv")
+    print(raw.columns)
+    input("Presione Enter para limpiar y guardar el dataset...")
     clean_df, raw_nan_df = clean(raw)
     print("Filas crudo:", len(raw))
     print("Filas limpio:", len(clean_df))

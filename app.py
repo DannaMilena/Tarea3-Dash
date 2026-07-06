@@ -13,8 +13,7 @@ Gráficas incluidas (>= 4 requeridas):
     2. Histograma / distribución con curva normal de referencia [reactiva]
     3. Boxplot por mes de la variable seleccionada            [reactiva]
     4. Mapa de calor de correlación entre todas las variables [estático]
-    5. Dispersión sensor vs. valor de referencia (calibración)[reactiva]
-    6. Porcentaje de valores faltantes (-200) por variable    [estático]
+    5. Porcentaje de valores faltantes (-200) por variable    [estático]
 
 Controladores / callbacks (>= 2 requeridos): se implementan 4 callbacks.
 """
@@ -38,22 +37,33 @@ df, df_with_nan = clean(raw)
 missing_df = missing_summary(df_with_nan)
 
 MESES_ES = {
-    1: "Ene", 2: "Feb", 3: "Mar", 4: "Abr", 5: "May", 6: "Jun",
-    7: "Jul", 8: "Ago", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dic",
+    1: "Ene", 
+    2: "Feb", 
+    3: "Mar", 
+    4: "Abr", 
+    5: "May", 
+    6: "Jun",
+    7: "Jul", 
+    8: "Ago", 
+    9: "Sep", 
+    10: "Oct", 
+    11: "Nov", 
+    12: "Dic",
 }
 df["mes_nombre"] = df["mes"].map(MESES_ES)
 
 VARIABLE_OPTIONS = [
-    {"label": POLLUTANT_LABELS[c], "value": c}
-    for c in ["CO(GT)", "NOx(GT)", "NO2(GT)", "C6H6(GT)", "T", "RH", "AH"]
+    {"label": POLLUTANT_LABELS[c], 
+     "value": c}
+    for c in [
+        "CO(GT)", 
+        "NOx(GT)", 
+        "NO2(GT)", 
+        "C6H6(GT)",
+        "T", 
+        "RH", 
+        "AH"]
 ]
-
-SENSOR_PAIRS = {
-    "CO(GT)": "PT08.S1(CO)",
-    "NOx(GT)": "PT08.S3(NOx)",
-    "NO2(GT)": "PT08.S4(NO2)",
-    "C6H6(GT)": "PT08.S2(NMHC)",
-}
 
 # ----------------------------------------------------------------------
 # 2. App Flask + Dash
@@ -70,7 +80,7 @@ CARD_STYLE = {
 }
 
 app.layout = html.Div(
-    style={"backgroundColor": "#f4f6f8", "fontFamily": "Segoe UI, Arial, sans-serif",
+    style={"backgroundColor": "#d487f06a", "fontFamily": "Segoe UI, Arial, sans-serif",
            "padding": "24px"},
     children=[
         html.H1("Air Quality – Dashboard de Análisis Exploratorio",
@@ -141,7 +151,7 @@ app.layout = html.Div(
             ],
         ),
 
-        # ---- Fila 3: dispersión sensor vs referencia + correlación ----
+        # ---- Fila 3: Correlación ----
         html.Div(
             style={"display": "flex", "gap": "20px", "flexWrap": "wrap"},
             children=[
