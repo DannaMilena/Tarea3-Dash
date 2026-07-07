@@ -1,7 +1,10 @@
 """Genera imágenes estáticas (PNG) con matplotlib para incluir en el informe
-Word. (Se usa matplotlib en vez de la exportación nativa de Plotly porque el
-entorno de generación no cuenta con Chrome/Kaleido; el dashboard interactivo
-en app.py sí usa Plotly/Dash normalmente)."""
+Word. 
+
+
+"""
+
+
 import os
 
 import matplotlib
@@ -64,26 +67,12 @@ ax.set_title("Matriz de correlación entre variables")
 fig.colorbar(im, ax=ax, shrink=0.8)
 fig.tight_layout(); fig.savefig("report_images/04_correlacion.png"); plt.close(fig)
 
-# 5. Dispersión sensor vs referencia (calibración) con regresión lineal
-sample = df.sample(2000, random_state=1)
-x_vals, y_vals = sample["PT08.S1(CO)"], sample["CO(GT)"]
-slope, intercept, r, p, se = stats.linregress(x_vals, y_vals)
-fig, ax = plt.subplots(figsize=(9, 4))
-ax.scatter(x_vals, y_vals, alpha=0.25, s=10, color="#3182bd")
-xs = np.linspace(x_vals.min(), x_vals.max(), 100)
-ax.plot(xs, slope * xs + intercept, color="red", linewidth=2,
-        label=f"OLS (R²={r**2:.2f})")
-ax.set_title("Calibración: sensor PT08.S1(CO) vs. CO de referencia")
-ax.set_xlabel("Respuesta sensor PT08.S1(CO)"); ax.set_ylabel("CO (mg/m³)")
-ax.legend()
-fig.tight_layout(); fig.savefig("report_images/05_scatter_calibracion.png"); plt.close(fig)
-
-# 6. Faltantes
+# 5. Faltantes
 fig, ax = plt.subplots(figsize=(9, 4))
 ax.bar(missing_df["variable"], missing_df["pct_faltante"], color="#fd8d3c")
 ax.set_title("Porcentaje de valores faltantes (código -200) por variable")
 ax.set_xlabel("Variable"); ax.set_ylabel("% faltante")
 plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
-fig.tight_layout(); fig.savefig("report_images/06_faltantes.png"); plt.close(fig)
+fig.tight_layout(); fig.savefig("report_images/05_faltantes.png"); plt.close(fig)
 
 print("Imágenes generadas en report_images/")

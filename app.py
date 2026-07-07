@@ -83,13 +83,28 @@ app.layout = html.Div(
     style={"backgroundColor": "#d487f06a", "fontFamily": "Segoe UI, Arial, sans-serif",
            "padding": "24px"},
     children=[
-        html.H1("Air Quality – Dashboard de Análisis Exploratorio",
-                style={"marginBottom": "4px"}),
-        html.P(
-            "Dataset: UCI Machine Learning Repository — Air Quality "
-            "(De Vito et al., 2008). Sensores de bajo costo desplegados en una "
-            "ciudad italiana, marzo 2004 – abril 2005.",
-            style={"color": "#555", "marginTop": "0"},
+        html.Div(
+            style={"display": "flex", "justifyContent": "space-between",
+                   "alignItems": "center", "flexWrap": "wrap", "gap": "12px"},
+            children=[
+                html.H1(" ༄ Air Quality – Dashboard de Análisis Exploratorio",
+                        style={"marginBottom": "4px"}),
+                html.A(
+                    "🔗 Ver en GitHub",
+                    href="https://github.com/DannaMilena/Tarea3-Dash",
+                    target="_blank",
+                    style={
+                        "backgroundColor": "#24292e",
+                        "color": "#ffffff",
+                        "padding": "10px 18px",
+                        "borderRadius": "8px",
+                        "textDecoration": "none",
+                        "fontWeight": "bold",
+                        "fontSize": "14px",
+                        "whiteSpace": "nowrap",
+                    },
+                ),
+            ],
         ),
 
         # ---- Controles ----

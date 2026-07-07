@@ -18,9 +18,19 @@ import pandas as pd
 
 # Columnas de interés (ground truth de referencia + sensores)
 NUMERIC_COLS = [
-    "CO(GT)", "PT08.S1(CO)", "NMHC(GT)", "C6H6(GT)", "PT08.S2(NMHC)",
-    "NOx(GT)", "PT08.S3(NOx)", "NO2(GT)", "PT08.S4(NO2)", "PT08.S5(O3)",
-    "T", "RH", "AH",
+    "CO(GT)", 
+    "PT08.S1(CO)", 
+    "NMHC(GT)", 
+    "C6H6(GT)", 
+    "PT08.S2(NMHC)",
+    "NOx(GT)", 
+    "PT08.S3(NOx)", 
+    "NO2(GT)", 
+    "PT08.S4(NO2)", 
+    "PT08.S5(O3)",
+    "T", 
+    "RH", 
+    "AH",
 ]
 
 POLLUTANT_LABELS = {
@@ -68,10 +78,13 @@ def clean(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     df = df.dropna(subset=["Date"])
 
     # 2. timestamp
+    # Date y Time vienen como string, pero Time tiene formato "HH.MM.SS" (puntos en vez de dos puntos)
+    # Se reemplaza el punto por dos puntos para poder parsear correctamente.
     df["Time"] = df["Time"].astype(str).str.replace(".", ":", regex=False)
     df["timestamp"] = pd.to_datetime(
         df["Date"] + " " + df["Time"], format="%d/%m/%Y %H:%M:%S", errors="coerce"
     )
+    # Se eliminan filas con timestamp inválido (poco probable, pero por si acaso)
     df = df.dropna(subset=["timestamp"]).sort_values("timestamp").reset_index(drop=True)
 
     # 3. -200 -> NaN (código de dato faltante documentado por UCI)
@@ -81,10 +94,15 @@ def clean(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
 
     df_with_nan = df.copy()  # versión sin imputar, para reportar % de faltantes
 
-    # 4. NMHC(GT) tiene >90% de datos faltantes (sensor saturado) -> se descarta
+    # 4. NMHC(GT) tiene >90% de datos faltantes -> se descarta
     #    de la imputación masiva y se documenta aparte; el resto se imputa.
     cols_to_impute = [c for c in NUMERIC_COLS if c != "NMHC(GT)"]
 
+
+    # 5. Imputación de faltantes por interpolación temporal lineal
+
+    # Se hace un set_index temporal para poder interpolar por tiempo
+    # si no se hace así, la interpolación es por índice (no por tiempo) y no es correcta.
     df_clean = df.set_index("timestamp")
     df_clean[cols_to_impute] = df_clean[cols_to_impute].interpolate(
         method="time", limit_direction="both"
@@ -93,6 +111,8 @@ def clean(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     df_clean[cols_to_impute] = df_clean[cols_to_impute].fillna(
         df_clean[cols_to_impute].median()
     )
+
+    # Se resetea el índice para que timestamp vuelva a ser columna normal
     df_clean = df_clean.reset_index()
 
     # variables auxiliares de calendario, útiles para el EDA / dashboard
@@ -101,6 +121,7 @@ def clean(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     df_clean["dia_semana"] = df_clean["timestamp"].dt.day_name()
 
     return df_clean, df_with_nan
+# el df clean tiene 
 
 
 def missing_summary(df_with_nan: pd.DataFrame) -> pd.DataFrame:
@@ -113,8 +134,6 @@ def missing_summary(df_with_nan: pd.DataFrame) -> pd.DataFrame:
 
 if __name__ == "__main__":
     raw = load_raw("data/AirQualityUCI.csv")
-    print(raw.columns)
-    input("Presione Enter para limpiar y guardar el dataset...")
     clean_df, raw_nan_df = clean(raw)
     print("Filas crudo:", len(raw))
     print("Filas limpio:", len(clean_df))

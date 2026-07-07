@@ -163,7 +163,7 @@
     ],
     "target": "CO(GT)",
     "resultados": {
-      "Regresión Lineal": {
+      "RegresiÃ³n Lineal": {
         "R2": 0.711,
         "MAE": 0.492
       },

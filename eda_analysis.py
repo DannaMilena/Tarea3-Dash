@@ -44,21 +44,33 @@ def train_regression_model(df: pd.DataFrame) -> dict:
     X = df[features].values
     y = df[target].values
 
+    # Dividimos el dataset en conjunto de entrenamiento y prueba (75%/25%)
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.25, random_state=42
     )
 
     scaler = StandardScaler().fit(X_train)
+    # aqui se estandarizan los datos de entrenamiento y prueba
+    # al estadarizar estamos transformando los datos para que tengan media 0 y desviación estándar 1
+
     X_train_s, X_test_s = scaler.transform(X_train), scaler.transform(X_test)
+
 
     models = {
         "Regresión Lineal": LinearRegression(),
+        #los estimadores son los arboles de decisión que se van a usar para el random forest
+        #el random state es para que los resultados sean reproducibles
+        #son reproducibles porque el random state es una semilla para el generador de números aleatorios
         "Random Forest": RandomForestRegressor(n_estimators=200, random_state=42),
     }
 
     results = {}
     for name, model in models.items():
+        # Entrenamiento y evaluación del modelo
+
+        #aqui se entrena el modelo, x es el conjunto de entrenamiento y y es el target
         model.fit(X_train_s, y_train)
+        #aqui se predice sobre el conjunto de prueba
         preds = model.predict(X_test_s)
         results[name] = {
             "R2": round(float(r2_score(y_test, preds)), 3),
@@ -89,12 +101,12 @@ def main():
 
     print(f"Observaciones: {summary['n_observaciones']}")
     print(f"Rango de fechas: {summary['rango_fechas']}")
-    print("\nPruebas de normalidad (D'Agostino-Pearson, alpha=0.05):")
     print("\nCorrelación de variables con CO(GT):")
     for var, c in summary["correlacion_con_CO_GT"].items():
         print(f"  {var:15s} {c:+.3f}")
     print("\nModelo supervisado (predicción de CO(GT) a partir de sensores):")
     for name, res in summary["modelo_supervisado_regresion"]["resultados"].items():
+        #MAE = mean absolute error, R2 = coeficiente de determinación
         print(f"  {name:18s} R2={res['R2']:.3f}  MAE={res['MAE']:.3f}")
     print(f"\nResumen completo guardado en {OUT_PATH}")
 
